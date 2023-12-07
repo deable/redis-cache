@@ -1,0 +1,35 @@
+{
+	"name": "deable/redis-cache",
+	"type": "library",
+	"description": "Simplest implementation of redis as psr/simple-cache.",
+	"keywords": [
+		"redis",
+		"cache"
+	],
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Lukas Povoda",
+			"email": "lupo112@gmail.com"
+		}
+	],
+	"require": {
+		"php": ">= 7.4",
+		"deable/redis": "^1.0",
+		"psr/simple-cache": "^1.0"
+	},
+	"archive": {
+		"exclude": [
+			".gitignore",
+			".editorconfig",
+			"*.md",
+			"*.yml",
+			"*.xml"
+		]
+	},
+	"autoload": {
+		"psr-4": {
+			"Deable\\RedisCache\\": "src"
+		}
+	}
+}
