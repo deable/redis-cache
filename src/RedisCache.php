@@ -47,7 +47,7 @@ final class RedisCache implements CacheInterface
 	 * @throws InvalidKeyException
 	 * @throws RedisCacheException
 	 */
-	public function get($key, $default = null)
+	public function get(string $key, mixed $default = null): mixed
 	{
 		$cacheKey = $this->formatKey($key);
 		try {
@@ -66,7 +66,7 @@ final class RedisCache implements CacheInterface
 	 * @throws InvalidKeyException
 	 * @throws RedisCacheException
 	 */
-	public function set($key, $value, $ttl = null): bool
+	public function set(string $key, mixed $value, null|int|\DateInterval $ttl = null): bool
 	{
 		$cacheKey = $this->formatKey($key);
 		try {
@@ -83,7 +83,7 @@ final class RedisCache implements CacheInterface
 	 * @throws InvalidKeyException
 	 * @throws RedisCacheException
 	 */
-	public function delete($key): bool
+	public function delete(string $key): bool
 	{
 		$cacheKey = $this->formatKey($key);
 		try {
@@ -125,7 +125,7 @@ final class RedisCache implements CacheInterface
 	 * @return iterable A list of key => value pairs. Cache keys that do not exist or are stale will have $default as value.
 	 * @throws InvalidKeyException
 	 */
-	public function getMultiple($keys, $default = null): iterable
+	public function getMultiple(iterable $keys, mixed $default = null): iterable
 	{
 		$items = [];
 		$chunks = array_chunk((array)$keys, self::LIMIT_BATCH);
@@ -146,7 +146,7 @@ final class RedisCache implements CacheInterface
 	 * @return bool True on success and false on failure.
 	 * @throws InvalidKeyException
 	 */
-	public function setMultiple($values, $ttl = null): bool
+	public function setMultiple(iterable $values, null|int|\DateInterval $ttl = null): bool
 	{
 		$result = true;
 		foreach ($values as $key => $value) {
@@ -163,7 +163,7 @@ final class RedisCache implements CacheInterface
 	 * @throws InvalidKeyException
 	 * @throws RedisCacheException
 	 */
-	public function deleteMultiple($keys): bool
+	public function deleteMultiple(iterable $keys): bool
 	{
 		try {
 			$chunks = array_chunk((array)$keys, self::LIMIT_BATCH);
@@ -185,7 +185,7 @@ final class RedisCache implements CacheInterface
 	 * @throws InvalidKeyException
 	 * @throws RedisCacheException
 	 */
-	public function has($key): bool
+	public function has(string $key): bool
 	{
 		$key = $this->formatKey($key);
 		try {
@@ -195,17 +195,9 @@ final class RedisCache implements CacheInterface
 		}
 	}
 
-	private function formatKey($key): string
+	private function formatKey(string $key): string
 	{
-		if (is_string($key)) {
-			return sprintf('%s:%s', $this->prefix, $key);
-		}
-		try {
-			return sprintf('%s:%s', $this->prefix, (string) $key);
-		} catch (Throwable $e) {
-			$class = get_class($key);
-			throw new InvalidKeyException("Invalid cache key typed as '$class', cannot be converted to string.", 0, $e);
-		}
+		return sprintf('%s:%s', $this->prefix, $key);
 	}
 
 	/**
@@ -213,7 +205,7 @@ final class RedisCache implements CacheInterface
 	 * @param mixed $default
 	 * @return mixed|null
 	 */
-	private function result($data, $default = null)
+	private function result(mixed $data, mixed $default = null): mixed
 	{
 		return empty($data) ? $default : $this->serializer->decode($data);
 	}
